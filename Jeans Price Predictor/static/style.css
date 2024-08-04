@@ -1,0 +1,102 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #555;
+    font-size: 1.5em;
+    margin-top: 20px;
+}
+
+/* Container Styles */
+.login {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Label Styles */
+label {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+/* Select Styles */
+select {
+    font-size: 1em;
+    padding: 8px;
+    margin-bottom: 10px; /* Reduced spacing between dropdowns */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+}
+
+/* Input Styles */
+input[type="text"] {
+    font-size: 1em;
+    padding: 8px;
+    margin-bottom: 10px; /* Consistent spacing between inputs */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+}
+
+/* Button Styles */
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.1em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Form Grouping */
+form > label {
+    margin-top: 10px; /* Adjust spacing between label and dropdown/input */
+}
+
+form > select,
+form > input[type="text"] {
+    margin-top: 0; /* Ensure dropdowns and inputs are closer to their labels */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .login {
+        margin: 20px;
+        padding: 15px;
+    }
+}

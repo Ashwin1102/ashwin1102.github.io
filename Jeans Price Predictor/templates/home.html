@@ -1,0 +1,84 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href='/static/style.css' />
+</head>
+
+<body>
+    <div class="login">
+        <h1>Predict Jeans Price</h1>
+
+        <!-- Main Input For Receiving Query to our ML -->
+        <form id="predictionForm" method="POST">
+
+            <!-- Brand Dropdown -->
+            <label for="brand">Brand</label>
+            <select id="brand" name="brand">
+                {% for brand in brands %}
+                <option value="{{ brand }}">{{ brand }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <!-- Distress Dropdown -->
+            <label for="distress">Distress</label>
+            <select id="distress" name="distress">
+                {% for dis in distress %}
+                <option value="{{ dis }}">{{ dis }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <!-- Waist rise Dropdown -->
+            <label for="waist_rise">Waist Rise</label>
+            <select id="waist_rise" name="waist_rise">
+                {% for rise in waist_rise %}
+                <option value="{{ rise }}">{{ rise }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <!-- Length Dropdown -->
+            <label for="length">Length</label>
+            <select id="length" name="length">
+                {% for len in length %}
+                <option value="{{ len }}">{{ len }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <!-- Fit Dropdown -->
+            <label for="fit">Fit</label>
+            <select id="fit" name="fit">
+                {% for x in fit %}
+                <option value="{{ x }}">{{ x }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <!-- Pockets Dropdown -->
+            <label for="number_of_pockets">Pockets</label>
+            <select id="number_of_pockets" name="number_of_pockets">
+                {% for pocket in number_of_pockets %}
+                <option value="{{ pocket }}">{{ pocket }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <!-- Stretch Dropdown -->
+            <label for="stretch">Stretch</label>
+            <select id="stretch" name="stretch">
+                {% for st in stretch %}
+                <option value="{{ st }}">{{ st }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <label>Rating</label>
+            <input type="text" name="rating" placeholder="Put jeans rating as mentioned on myntra" required="required" /><br>
+
+            <label>Number of reviews</label>
+            <input type="text" name="number_of_ratings" placeholder="Put jeans number of reviews as mentioned on myntra" required="required" /><br>
+
+            <button type="submit">Predict Price</button>
+        </form>
+        <h2>
+            Price of the jeans is {{price}}
+        </h2>
+
+        <body>
+
+</html>
