@@ -1,76 +1,62 @@
-import pickle
-from flask import Flask, request, jsonify, render_template
-import numpy as np
+import streamlit as st
 import pandas as pd
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+import pickle
 
-app = Flask(__name__)
 
-# Load models and encoders
-try:
-    random_forest = pickle.load(open('models/randomForest.pkl', 'rb'))
-    label_encoder_brand = pickle.load(open('models/LabelEncoderBrand.pkl', 'rb'))
-    label_encoder_fit = pickle.load(open('models/LabelEncoderFit.pkl', 'rb'))
-    preprocessor = pickle.load(open('models/preprocessor.pkl', 'rb'))
-except Exception as e:
-    print(f"Error loading models: {e}")
+random_forest = pickle.load(open('models/randomForest.pkl', 'rb'))
+label_encoder_brand = pickle.load(open('models/LabelEncoderBrand.pkl', 'rb'))
+label_encoder_fit = pickle.load(open('models/LabelEncoderFit.pkl', 'rb'))
+preprocessor = pickle.load(open('models/preprocessor.pkl', 'rb'))
 
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    try:
-        # Load data
-        df = pd.read_csv('data/cleaned_jeans_data.csv')
+def main():
+    menu = ["Home","Dashboard"]
+    choice = st.sidebar.selectbox("Menu",menu)
 
-        # Extract unique values for dropdown options
-        brands = df['brand'].unique().tolist()
-        distress = df['distress'].unique().tolist()
-        waist_rise = df['waist_rise'].unique().tolist()
-        length = df['length'].unique().tolist()
-        fit = df['fit'].unique().tolist()
-        number_of_pockets = df['number_of_pockets'].unique().tolist()
-        stretch = df['stretch'].unique().tolist()
-        rating = df['rating'].unique().tolist()
-        number_of_ratings = df['number_of_ratings'].unique().tolist()
+    if choice == "Home":
+        st.title("Jeans Price Predictor")
+        df = pd.read_csv("data/cleaned_jeans_data.csv")
 
-        if request.method == 'POST':
-            # Get form inputs
-            brands_input = request.form.get('brand')
-            distress_input = request.form.get('distress')
-            waist_rise_input = request.form.get('waist_rise')
-            length_input = request.form.get('length')
-            fit_input = request.form.get('fit')
-            number_of_pockets_input = request.form.get('number_of_pockets')
-            stretch_input = request.form.get('stretch')
-            rating_input = float(request.form.get('rating'))
-            number_of_ratings_input = float(request.form.get('number_of_ratings'))
+        with st.form(key="form1"):
+            brands = st.selectbox("Please select the brand name", df['brand'].unique().tolist())
+            distress = st.selectbox("Please select the distress type", df['distress'].unique().tolist())
+            length = st.selectbox("Please select the length type", df['length'].unique().tolist())
+            waist_rise = st.selectbox("Please select the waist rise type", df['waist_rise'].unique().tolist())
+            fit = st.selectbox("Please select the fit type", df['fit'].unique().tolist())
+            number_of_pockets = st.selectbox("Please select the number of pockets", df['number_of_pockets'].unique().tolist())
+            stretch = st.selectbox("Please select the stretch of jeans", df['stretch'].unique().tolist())
+            rating = st.text_input("Please type the rating of jeans on myntra")
+            number_of_ratings = st.text_input("Please type the number of reviews of jeans on myntra")
 
-            # Create DataFrame for prediction
-            new_sample = pd.DataFrame({
-                "brand": [brands_input],
-                "distress": [distress_input],
-                "waist_rise": [waist_rise_input],
-                "length": [length_input],
-                "fit": [fit_input],
-                "number_of_pockets": [number_of_pockets_input],
-                "stretch": [stretch_input],
-                "rating": [rating_input],
-                "number_of_ratings": [number_of_ratings_input]
-            })
+            submit_button = st.form_submit_button(label='Predict')
 
-            # Transform and predict
-            new_sample['fit'] = label_encoder_fit.transform(new_sample['fit'])
-            new_sample['brand'] = label_encoder_brand.transform(new_sample['brand'])
-            new_sample_encoded = preprocessor.transform(new_sample)
+            if submit_button:
+                st.success("Recommend price for jeans is {:.2f}".format(predict_price(brands, distress, length, waist_rise, fit, number_of_pockets, stretch, rating, number_of_ratings)))
 
-            prediction = random_forest.predict(new_sample_encoded)
+    else:
+        st.title("Dashboard")
 
-            return render_template('home.html', brands=brands, distress=distress, waist_rise=waist_rise, length=length, fit=fit, number_of_pockets=number_of_pockets, stretch=stretch, rating=rating, number_of_ratings=number_of_ratings, price=prediction[0])
 
-        return render_template('home.html', brands=brands, distress=distress, waist_rise=waist_rise, length=length, fit=fit, number_of_pockets=number_of_pockets, stretch=stretch, rating=rating, number_of_ratings=number_of_ratings)
+def predict_price(brands, distress, length, waist_rise, fit, number_of_pockets, stretch, rating, number_of_ratings):
+     
+    new_sample = pd.DataFrame({
+        "brand": [brands],
+        "distress": [distress],
+        "waist_rise": [waist_rise],
+        "length": [length],
+        "fit": [fit],
+        "number_of_pockets": [number_of_pockets],
+        "stretch": [stretch],
+        "rating": [rating],
+        "number_of_ratings": [number_of_ratings]
+    })
 
-    except Exception as e:
-        print(f"Error processing request: {e}")
-        return "An error occurred. Please try again later."
+    new_sample['fit'] = label_encoder_fit.transform(new_sample['fit'])
+    new_sample['brand'] = label_encoder_brand.transform(new_sample['brand'])
+    new_sample_encoded = preprocessor.transform(new_sample)
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    prediction = random_forest.predict(new_sample_encoded)
+
+    return prediction[0]
+
+if __name__ == '__main__':
+    main()
