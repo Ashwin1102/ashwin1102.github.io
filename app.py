@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import pickle
-import sklearn
 import joblib
 
 # random_forest = pickle.load(open('models/randomForest.pkl', 'rb'))
