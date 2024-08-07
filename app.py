@@ -2,11 +2,8 @@ import streamlit as st
 import pandas as pd
 import pickle
 import joblib
-
-# random_forest = pickle.load(open('models/randomForest.pkl', 'rb'))
-# label_encoder_brand = pickle.load(open('models/LabelEncoderBrand.pkl', 'rb'))
-# label_encoder_fit = pickle.load(open('models/LabelEncoderFit.pkl', 'rb'))
-# preprocessor = pickle.load(open('models/preprocessor.pkl', 'rb'))
+import plotly.express as px
+import plotly.figure_factory as ff
 
 random_forest = joblib.load("models/randomForest.sav")
 label_encoder_brand = joblib.load("models/LabelEncoderBrand.sav")
@@ -16,10 +13,11 @@ preprocessor = joblib.load("models/preprocessor.sav")
 def main():
     menu = ["Home","Dashboard"]
     choice = st.sidebar.selectbox("Menu",menu)
+    df = pd.read_csv("data/cleaned_jeans_data.csv")
 
     if choice == "Home":
         st.title("Jeans Price Predictor")
-        df = pd.read_csv("data/cleaned_jeans_data.csv")
+        
 
         with st.form(key="form1"):
             brands = st.selectbox("Please select the brand name", df['brand'].unique().tolist())
@@ -39,7 +37,29 @@ def main():
 
     else:
         st.title("Dashboard")
+        
+        with st.form(key="form2"):
+            brands_list = df['brand'].unique().tolist()
+            brand1 = st.selectbox("Please select the first brand", brands_list)
+            brands_list.remove(brand1)
+            brand2 = st.selectbox("Please select the second brand", brands_list)
 
+            df_group = df[(df["brand"] == brand1) | (df["brand"] == brand2)]
+
+            plot_button = st.form_submit_button(label='Plot')
+
+            if plot_button:
+
+                # Scatter plot
+                fig = px.scatter(
+                    df_group,
+                    x="price",
+                    y="number_of_ratings",
+                    color="brand",
+                    size="rating"
+                )
+
+                st.plotly_chart(fig, key="jeans")
 
 def predict_price(brands, distress, length, waist_rise, fit, number_of_pockets, stretch, rating, number_of_ratings):
      
