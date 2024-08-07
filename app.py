@@ -2,11 +2,17 @@ import streamlit as st
 import pandas as pd
 import pickle
 import sklearn
+import joblib
 
-random_forest = pickle.load(open('models/randomForest.pkl', 'rb'))
-label_encoder_brand = pickle.load(open('models/LabelEncoderBrand.pkl', 'rb'))
-label_encoder_fit = pickle.load(open('models/LabelEncoderFit.pkl', 'rb'))
-preprocessor = pickle.load(open('models/preprocessor.pkl', 'rb'))
+# random_forest = pickle.load(open('models/randomForest.pkl', 'rb'))
+# label_encoder_brand = pickle.load(open('models/LabelEncoderBrand.pkl', 'rb'))
+# label_encoder_fit = pickle.load(open('models/LabelEncoderFit.pkl', 'rb'))
+# preprocessor = pickle.load(open('models/preprocessor.pkl', 'rb'))
+
+random_forest = joblib.load("models/randomForest.sav")
+label_encoder_brand = joblib.load("models/LabelEncoderBrand.sav")
+label_encoder_fit = joblib.load("models/LabelEncoderFit.sav")
+preprocessor = joblib.load("models/preprocessor.sav")
 
 def main():
     menu = ["Home","Dashboard"]
