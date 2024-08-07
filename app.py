@@ -1,17 +1,12 @@
 import streamlit as st
 import pandas as pd
 import pickle
-import os
+import sklearn
 
-random_forest_model_path = os.path.join(os.path.dirname(__file__), 'models', 'randomForest.pkl')
-label_encoder_brand_model_path = os.path.join(os.path.dirname(__file__), 'models', 'LabelEncoderBrand.pkl')
-label_encoder_fit_model_path = os.path.join(os.path.dirname(__file__), 'models', 'LabelEncoderFit.pkl')
-preprocessor_model_path = os.path.join(os.path.dirname(__file__), 'models', 'preprocessor.pkl')
-
-random_forest = pickle.load(open(random_forest_model_path, 'rb'))
-label_encoder_brand = pickle.load(open(label_encoder_brand_model_path, 'rb'))
-label_encoder_fit = pickle.load(open(label_encoder_fit_model_path, 'rb'))
-preprocessor = pickle.load(open(preprocessor_model_path, 'rb'))
+random_forest = pickle.load(open('models/randomForest.pkl', 'rb'))
+label_encoder_brand = pickle.load(open('models/LabelEncoderBrand.pkl', 'rb'))
+label_encoder_fit = pickle.load(open('models/LabelEncoderFit.pkl', 'rb'))
+preprocessor = pickle.load(open('models/preprocessor.pkl', 'rb'))
 
 def main():
     menu = ["Home","Dashboard"]
