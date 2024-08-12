@@ -4,6 +4,7 @@ import pickle
 import joblib
 import plotly.express as px
 import plotly.figure_factory as ff
+import matplotlib.pyplot as plt
 
 random_forest = joblib.load("models/randomForest.sav")
 label_encoder_brand = joblib.load("models/LabelEncoderBrand.sav")
@@ -37,29 +38,47 @@ def main():
 
     else:
         st.title("Dashboard")
-        
-        with st.form(key="form2"):
-            brands_list = df['brand'].unique().tolist()
-            brand1 = st.selectbox("Please select the first brand", brands_list)
-            brands_list.remove(brand1)
-            brand2 = st.selectbox("Please select the second brand", brands_list)
 
-            df_group = df[(df["brand"] == brand1) | (df["brand"] == brand2)]
+        # Pie Chart
+        top_n = st.text_input("Please enter a number to get the appropriate chart", "10")
+        if top_n.isdigit():
+            brand_counts = df['brand'].value_counts()
+            labels = brand_counts.head(int(top_n)).index
+            sizes = brand_counts.head(int(top_n)).values
 
-            plot_button = st.form_submit_button(label='Plot')
+            # Create a pie chart
+            fig, ax = plt.subplots()
+            ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
+            ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-            if plot_button:
+            # Display the pie chart in Streamlit
+            st.pyplot(fig)
+        else:
+            st.error("Please enter a valid integer.")
 
-                # Scatter plot
-                fig = px.scatter(
-                    df_group,
-                    x="price",
-                    y="number_of_ratings",
-                    color="brand",
-                    size="rating"
-                )
 
-                st.plotly_chart(fig, key="jeans")
+        st.write("")
+        st.write("")
+        st.write("")
+
+        # Scatter Plot
+        brands_list = df['brand'].unique().tolist()
+        brand1 = st.selectbox("Please select the first brand", brands_list)
+        brands_list.remove(brand1)
+        brand2 = st.selectbox("Please select the second brand", brands_list)
+
+        df_group = df[(df["brand"] == brand1) | (df["brand"] == brand2)]
+
+        # Scatter plot
+        fig = px.scatter(
+            df_group,
+            x="price",
+            y="number_of_ratings",
+            color="brand",
+            size="rating"
+        )
+
+        st.plotly_chart(fig, key="jeans")
 
 def predict_price(brands, distress, length, waist_rise, fit, number_of_pockets, stretch, rating, number_of_ratings):
      
